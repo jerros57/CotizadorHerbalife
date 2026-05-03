@@ -4,7 +4,7 @@
   "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://TU_USUARIO.github.io/NOMBRE_REPOSITORIO/",
+    "url": "https://jerros57.github.io/CotizadorHerbalife/",
     "cleartext": true
   }
 }
