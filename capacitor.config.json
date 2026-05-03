@@ -1,0 +1,10 @@
+{
+  "appId": "com.herbalife.cotizador",
+  "appName": "Cotizador Herbalife",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://TU_USUARIO.github.io/NOMBRE_REPOSITORIO/",
+    "cleartext": true
+  }
+}
