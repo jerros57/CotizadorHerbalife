@@ -4,37 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotizador Herbalife Ecuador 2026</title>
-<link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
 
-<style>
+    <style>
         body { font-family: 'Segoe UI', sans-serif; padding: 10px; background-color: #f4fce3; color: #333; margin: 0;}
         h2 { color: #2e7d32; text-align: center; font-size: 22px; margin-bottom: 5px;}
         h3.categoria { color: #4caf50; border-bottom: 2px solid #4caf50; padding-bottom: 5px; margin-top: 20px;}
-        
+
         .catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; padding-bottom: 10px;}
-        .producto { background: white; border: 2px solid #7cb342; padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .producto { background: white; border: 2px solid #7cb342; padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.1s;}
         .producto:active { transform: scale(0.95); border-color: #2e7d32; }
         .producto img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; background-color: #eee;}
         .nombre-prod { font-size: 11px; font-weight: bold; margin-top: 5px; display: block; height: 42px; overflow: hidden; line-height: 1.2;}
-        
+
         .ticket-container { background: white; padding: 15px; border: 2px dashed #333; margin: 20px auto; max-width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
         .ticket-container h3 { text-align: center; margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 8px; color: black; }
-        
+
         #lista-ticket { list-style: none; padding: 0; margin: 0 0 15px 0; font-size: 13px;}
         .item-ticket { display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding: 6px 0;}
-        
+
         .controles { display: flex; flex-direction: column; gap: 10px; }
         select { padding: 10px; border-radius: 5px; border: 2px solid #7cb342; font-weight: bold; font-size: 14px; background: #e8f5e9;}
-        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 5px;}
-        .btn-imprimir { background: #4caf50; color: white; }
+        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 5px; cursor: pointer;}
+        
+        /* Botón de Compartir Estilo WhatsApp */
+        .btn-compartir { background: #25D366; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-compartir:active { background: #128C7E; }
+        
         .btn-limpiar { background: #e0e0e0; color: #333; }
 
+        /* Mantenemos el soporte para impresión por si acaso, pero priorizamos compartir */
         @media print {
-            body { background: white; padding: 0; }
             body * { visibility: hidden; }
             .ticket-container, .ticket-container * { visibility: visible; }
-            .ticket-container { position: absolute; left: 0; top: 0; width: 100%; border: none; margin: 0; padding: 0; box-shadow: none;}
-            .controles, select, button { display: none !important; }
+            .ticket-container { position: absolute; left: 0; top: 0; width: 100%; border: none; margin: 0; }
         }
     </style>
 </head>
@@ -189,7 +192,7 @@
     <div class="ticket-container">
         <h3>🧾 Ticket de Compra</h3>
         <ul id="lista-ticket"></ul>
-        
+
         <div class="controles">
             <select id="nivel-precio" onchange="actualizarTicket()">
                 <option value="pvp">💰 Precio Público (PVP)</option>
@@ -199,10 +202,12 @@
                 <option value="p42">🏷️ Descuento del 42%</option>
                 <option value="p50">💎 Descuento del 50%</option>
             </select>
-            
+
             <h2 style="margin: 5px 0; color: #2e7d32; text-align: right;">Total: $<span id="total">0.00</span></h2>
-            
-            <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ticket</button>
+
+            <button class="btn-compartir" onclick="compartirWhatsApp()">
+                <span>📲 Enviar por WhatsApp</span>
+            </button>
             <button class="btn-limpiar" onclick="limpiar()">🗑️ Borrar Todo</button>
         </div>
     </div>
@@ -223,7 +228,7 @@
             carrito.forEach((prod) => {
                 let precioCorrecto = prod[nivel];
                 total += precioCorrecto;
-                
+
                 htmlLista += `
                 <li class="item-ticket">
                     <span>${prod.nombre}</span>
@@ -244,26 +249,63 @@
             actualizarTicket();
         }
 
+        // FUNCIÓN CLAVE: COMPARTIR MEDIANTE API NATIVA DEL CELULAR
+        function compartirWhatsApp() {
+            if (carrito.length === 0) {
+                alert("Primero agrega productos al carrito.");
+                return;
+            }
+
+            let nivelLabel = document.getElementById('nivel-precio').options[document.getElementById('nivel-precio').selectedIndex].text;
+            let nivelKey = document.getElementById('nivel-precio').value;
+            let total = document.getElementById('total').innerText;
+
+            let mensaje = "📋 *COTIZACIÓN HERBALIFE ECUADOR*\n";
+            mensaje += "------------------------------\n";
+            mensaje += "*Nivel:* " + nivelLabel + "\n\n";
+
+            carrito.forEach((prod, index) => {
+                mensaje += (index + 1) + ". " + prod.nombre + ": *$" + prod[nivelKey].toFixed(2) + "*\n";
+            });
+
+            mensaje += "\n------------------------------\n";
+            mensaje += "🚀 *TOTAL A PAGAR: $" + total + "*\n";
+            mensaje += "------------------------------\n";
+            mensaje += "Generado por: Cotizador Herbalife 🍃";
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi Cotización Herbalife',
+                    text: mensaje
+                })
+                .then(() => console.log('Compartido con éxito'))
+                .catch((error) => console.log('Error al compartir', error));
+            } else {
+                // Fallback para navegadores antiguos
+                let url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+                window.open(url, "_blank");
+            }
+        }
+
         actualizarTicket();
     </script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').then(reg => {
-        // Revisa si hay una actualización disponible en el servidor
-        reg.onupdatefound = () => {
-          const installingWorker = reg.installing;
-          installingWorker.onstatechange = () => {
-            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              alert('Nueva actualización disponible. Reinicia la app.');
-              location.reload();
-            }
-          };
-        };
-      });
-    });
-  }
-</script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').then(reg => {
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  alert('Nueva actualización disponible. Reinicia la app.');
+                  location.reload();
+                }
+              };
+            };
+          });
+        });
+      }
+    </script>
 </body>
 </html>
