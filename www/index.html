@@ -187,29 +187,33 @@
             <img src="img/skinserum.png" alt="Foto">
             <span class="nombre-prod">Skin Serum</span>
         </div>
-        <div class="producto" onclick="agregar('Skin Tonificador', 28.22, 24.49, 22.00, 19.51, 17.76, 15.77)">
+                <div class="producto" onclick="agregar('Skin Tonificador', 28.22, 24.49, 22.00, 19.51, 17.76, 15.77)">
             <img src="img/skintonificador.png" alt="Foto">
             <span class="nombre-prod">Skin Tonificador Hierbas</span>
         </div>
+    </div> <div class="ticket-container">
+        <h3>🧾 Tu Cotización</h3>
+        <ul id="lista-ticket">
+            </ul>
+    </div>
 
+    <div class="controles">
+        <select id="nivel-precio" onchange="actualizarTicket()">
+            <option value="pvp">💰 Precio Público (PVP)</option>
+            <option value="p15">🏷️ Descuento del 15%</option>
+            <option value="p25">🏷️ Descuento del 25%</option>
+            <option value="p35">🏷️ Descuento del 35%</option>
+            <option value="p42">🏷️ Descuento del 42%</option>
+            <option value="p50">💎 Descuento del 50%</option>
+        </select>
 
-        <div class="controles">
-            <select id="nivel-precio" onchange="actualizarTicket()">
-                <option value="pvp">💰 Precio Público (PVP)</option>
-                <option value="p15">🏷️ Descuento del 15%</option>
-                <option value="p25">🏷️ Descuento del 25%</option>
-                <option value="p35">🏷️ Descuento del 35%</option>
-                <option value="p42">🏷️ Descuento del 42%</option>
-                <option value="p50">💎 Descuento del 50%</option>
-            </select>
+        <h2 style="margin: 5px 0; color: #2e7d32; text-align: right;">Total: $<span id="total">0.00</span></h2>
 
-            <h2 style="margin: 5px 0; color: #2e7d32; text-align: right;">Total: $<span id="total">0.00</span></h2>
-
-            <button class="btn-compartir" onclick="compartirWhatsApp()">
-                <span>📲 Enviar por WhatsApp</span>
-            </button>
-            <button class="btn-limpiar" onclick="limpiar()">🗑️ Borrar Todo</button>
-        </div>
+        <button class="btn-compartir" onclick="compartirWhatsApp()">
+            <span>📲 Enviar por WhatsApp</span>
+        </button>
+        <button class="btn-limpiar" onclick="limpiar()">🗑️ Borrar Todo</button>
+    </div>
     </div>
 
     <script>
