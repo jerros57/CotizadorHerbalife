@@ -38,6 +38,7 @@ const urlsToCache = [
 './img/skinmascarilla.png',
 './img/skinserum.png',
 './img/skintonificador.png',
+'./img/nightmode.png',
 
 ];
 
