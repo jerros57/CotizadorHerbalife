@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Herbalife Ecuador 2026</title>
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 10px; background-color: #f4fce3; color: #333; margin: 0;}
+        h2 { color: #2e7d32; text-align: center; font-size: 22px; margin-bottom: 5px;}
+        h3.categoria { color: #4caf50; border-bottom: 2px solid #4caf50; padding-bottom: 5px; margin-top: 20px;}
+
+        .catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; padding-bottom: 10px;}
+        .producto { background: white; border: 2px solid #7cb342; padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.1s;}
+        .producto:active { transform: scale(0.95); border-color: #2e7d32; }
+        .producto img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; background-color: #eee;}
+        .nombre-prod { font-size: 11px; font-weight: bold; margin-top: 5px; display: block; height: 42px; overflow: hidden; line-height: 1.2;}
+
+        .ticket-container { background: white; padding: 15px; border: 2px dashed #333; margin: 20px auto; max-width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
+        .ticket-container h3 { text-align: center; margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 8px; color: black; }
+
+        #lista-ticket { list-style: none; padding: 0; margin: 0 0 15px 0; font-size: 13px;}
+        .item-ticket { display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding: 6px 0;}
+
+        .controles { display: flex; flex-direction: column; gap: 10px; }
+        select { padding: 10px; border-radius: 5px; border: 2px solid #7cb342; font-weight: bold; font-size: 14px; background: #e8f5e9;}
+        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 5px; cursor: pointer;}
+
+        /* Botón de Compartir Estilo WhatsApp */
+        .btn-compartir { background: #25D366; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-compartir:active { background: #128C7E; }
+
+        .btn-limpiar { background: #e0e0e0; color: #333; }
+
+        /* Mantenemos el soporte para impresión por si acaso, pero priorizamos compartir */
+        @media print {
+            body * { visibility: hidden; }
+            .ticket-container, .ticket-container * { visibility: visible; }
+            .ticket-container { position: absolute; left: 0; top: 0; width: 100%; border: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🍃 Catálogo Ecuador 2026</h2>
+
+    <h3 class="categoria">Nutrición Interna</h3>
+    <div class="catalogo">
+        <div class="producto" onclick="agregar('Aloe Concentrado', 55.00, 47.73, 42.87, 38.02, 34.62, 30.74)">
+            <img src="img/aloe.png" alt="Foto">
+            <span class="nombre-prod">Aloe Concentrado</span>
+        </div>
+        <div class="producto" onclick="agregar('Barras Proteína', 42.73, 39.22, 36.87, 34.52, 32.88, 31.00)">
+            <img src="img/barras.png" alt="Foto">
+            <span class="nombre-prod">Barras de Proteína</span>
+        </div>
+        <div class="producto" onclick="agregar('Batido F1', 57.87, 50.21, 45.11, 40.01, 36.43, 32.35)">
+            <img src="img/batido.png" alt="Foto">
+            <span class="nombre-prod">Batidos Nutricional F1</span>
+        </div>
+        <div class="producto" onclick="agregar('Betahearth', 63.15, 55.08, 49.69, 44.31, 40.55, 36.24)">
+            <img src="img/betahearth.png" alt="Foto">
+            <span class="nombre-prod">Betahearth</span>
+        </div>
+        <div class="producto" onclick="agregar('Beverage Mix', 50.08, 44.07, 40.05, 36.04, 33.24, 30.03)">
+            <img src="img/beverage.png" alt="Foto">
+            <span class="nombre-prod">Beverage Mix</span>
+        </div>
+        <div class="producto" onclick="agregar('Colágeno', 61.99, 54.07, 48.80, 43.53, 39.83, 35.62)">
+            <img src="img/colageno.png" alt="Foto">
+            <span class="nombre-prod">Colágeno</span>
+        </div>
+        <div class="producto" onclick="agregar('CR7 Drive', 41.76, 36.74, 33.39, 30.04, 27.70, 25.02)">
+            <img src="img/cr7.png" alt="Foto">
+            <span class="nombre-prod">CR7 Drive</span>
+        </div>
+        <div class="producto" onclick="agregar('Fibra Activa', 53.50, 46.42, 41.70, 36.98, 33.67, 29.90)">
+            <img src="img/fibra.png" alt="Foto">
+            <span class="nombre-prod">Fibra Manzana/Guayaba</span>
+        </div>
+        <div class="producto" onclick="agregar('Golden Beverage', 35.51, 31.05, 28.08, 25.11, 23.03, 20.65)">
+            <img src="img/golden.png" alt="Foto">
+            <span class="nombre-prod">Golden Beverage</span>
+        </div>
+        <div class="producto" onclick="agregar('Herbalifeline', 53.80, 46.68, 41.93, 37.19, 33.86, 30.07)">
+            <img src="img/herbalifeline.png" alt="Foto">
+            <span class="nombre-prod">Herbalifeline</span>
+        </div>
+        <div class="producto" onclick="agregar('Immunity Essentials', 43.30, 37.85, 34.21, 30.58, 28.03, 25.13)">
+            <img src="img/immunity.png" alt="Foto">
+            <span class="nombre-prod">Immunity Essentials</span>
+        </div>
+        <div class="producto" onclick="agregar('Liftoff Sobres', 108.41, 94.07, 84.50, 74.94, 68.24, 60.59)">
+            <img src="img/liftoff.png" alt="Foto">
+            <span class="nombre-prod">Liftoff Polvo Sobres</span>
+        </div>
+        <div class="producto" onclick="agregar('Memory Armor', 44.00, 38.39, 34.65, 30.91, 28.29, 25.30)">
+            <img src="img/memory.png" alt="Foto">
+            <span class="nombre-prod">Memory Armor</span>
+        </div>
+        <div class="producto" onclick="agregar('Multivitamínico', 24.16, 20.96, 18.83, 16.70, 15.21, 13.50)">
+            <img src="img/multivitaminico.png" alt="Foto">
+            <span class="nombre-prod">Multivitamínico F2</span>
+        </div>
+        <div class="producto" onclick="agregar('Niteworks', 68.39, 59.89, 54.22, 48.55, 44.58, 40.04)">
+            <img src="img/niteworks.png" alt="Foto">
+            <span class="nombre-prod">Niteworks</span>
+        </div>
+        <div class="producto" onclick="agregar('Té N-R-G', 28.43, 24.67, 22.16, 19.65, 17.89, 15.89)">
+            <img src="img/nrg.png" alt="Foto">
+            <span class="nombre-prod">Té N-R-G</span>
+        </div>
+        <div class="producto" onclick="agregar('Nutri Soup', 42.04, 36.67, 33.08, 29.49, 26.98, 24.12)">
+            <img src="img/nutrisoup.png" alt="Foto">
+            <span class="nombre-prod">Nutri Soup</span>
+        </div>
+        <div class="producto" onclick="agregar('Nutri Muffin', 46.04, 39.95, 35.88, 31.82, 28.98, 25.73)">
+            <img src="img/nutrimuffin.png" alt="Foto">
+            <span class="nombre-prod">Nutri Muffin</span>
+        </div>
+        <div class="producto" onclick="agregar('Proteína PDM', 74.70, 64.63, 58.34, 52.04, 47.64, 42.60)">
+            <img src="img/pdm.png" alt="Foto">
+            <span class="nombre-prod">PDM Crema de Maní</span>
+        </div>
+        <div class="producto" onclick="agregar('Proteína PPP', 42.12, 36.55, 32.84, 29.12, 26.52, 23.55)">
+            <img src="img/ppp.png" alt="Foto">
+            <span class="nombre-prod">PPP</span>
+        </div>
+        <div class="producto" onclick="agregar('Probiotics', 46.26, 40.14, 36.06, 31.98, 29.12, 25.86)">
+            <img src="img/probiotics.png" alt="Foto">
+            <span class="nombre-prod">Probiotics</span>
+        </div>
+        <div class="producto" onclick="agregar('Rebuild H24', 92.78, 83.43, 77.20, 70.96, 66.60, 61.61)">
+            <img src="img/rebuild.png" alt="Foto">
+            <span class="nombre-prod">Rebuild H24</span>
+        </div>
+        <div class="producto" onclick="agregar('Relaxation Tea', 53.88, 47.16, 42.68, 38.20, 35.06, 31.48)">
+            <img src="img/relaxation.png" alt="Foto">
+            <span class="nombre-prod">Relaxation Tea</span>
+        </div>
+        <div class="producto" onclick="agregar('Té 100gr', 67.42, 58.50, 52.56, 46.61, 42.44, 37.69)">
+            <img src="img/te100.png" alt="Foto">
+            <span class="nombre-prod">Té 100gr</span>
+        </div>
+        <div class="producto" onclick="agregar('Té Chai', 38.66, 33.55, 30.14, 26.72, 24.34, 21.61)">
+            <img src="img/techai.png" alt="Foto">
+            <span class="nombre-prod">Té Chai</span>
+        </div>
+        <div class="producto" onclick="agregar('Xtra-Cal', 24.16, 20.96, 18.83, 16.70, 15.21, 13.50)">
+            <img src="img/xtracal.png" alt="Foto">
+            <span class="nombre-prod">Xtra-Cal (Calcio)</span>
+        </div>
+         <div class="producto" onclick="agregar('Night Mode 🌙', 38.66, 33.62, 31.42, 28.52, 26.42, 24.17)">
+            <img src="img/nightmode.png" alt="Foto">
+            <span class="nombre-prod">Night Mode</span>
+        </div>
+    </div>
+
+    <h3 class="categoria">Nutrición Externa</h3>
+    <div class="catalogo">
+        <div class="producto" onclick="agregar('Crema Humectante', 63.11, 54.76, 49.19, 43.62, 39.73, 35.27)">
+            <img src="img/cremadia.png" alt="Foto">
+            <span class="nombre-prod">Crema Humectante Día</span>
+        </div>
+        <div class="producto" onclick="agregar('Gel Refrescante', 19.38, 16.81, 15.10, 13.39, 12.20, 10.83)">
+            <img src="img/gelcorporal.png" alt="Foto">
+            <span class="nombre-prod">Gel Refrescante Corporal</span>
+        </div>
+        <div class="producto" onclick="agregar('Herbal Aloe Crema', 19.38, 16.81, 15.10, 13.39, 12.20, 10.83)">
+            <img src="img/aloecrema.png" alt="Foto">
+            <span class="nombre-prod">Herbal Aloe Crema</span>
+        </div>
+        <div class="producto" onclick="agregar('Skin Exfoliante', 29.13, 25.27, 22.70, 20.13, 18.33, 16.28)">
+            <img src="img/skinexfoliante.png" alt="Foto">
+            <span class="nombre-prod">Skin Exfoliante</span>
+        </div>
+        <div class="producto" onclick="agregar('Skin Limpiador', 37.21, 32.29, 29.01, 25.72, 23.42, 20.80)">
+            <img src="img/skinlimpiador.png" alt="Foto">
+            <span class="nombre-prod">Skin Limpiador Cítrico</span>
+        </div>
+        <div class="producto" onclick="agregar('Skin Mascarilla', 31.61, 27.43, 24.64, 21.85, 19.90, 17.67)">
+            <img src="img/skinmascarilla.png" alt="Foto">
+            <span class="nombre-prod">Skin Mascarilla Arcilla</span>
+        </div>
+        <div class="producto" onclick="agregar('Skin Serum', 83.80, 72.71, 65.32, 57.92, 52.75, 46.83)">
+            <img src="img/skinserum.png" alt="Foto">
+            <span class="nombre-prod">Skin Serum</span>
+        </div>
+                <div class="producto" onclick="agregar('Skin Tonificador', 28.22, 24.49, 22.00, 19.51, 17.76, 15.77)">
+            <img src="img/skintonificador.png" alt="Foto">
+            <span class="nombre-prod">Skin Tonificador Hierbas</span>
+        </div>
+    </div> <div class="ticket-container">
+        <h3>🧾 Tu Cotización</h3>
+        <ul id="lista-ticket">
+            </ul>
+    </div>
+
+    <div class="controles">
+        <select id="nivel-precio" onchange="actualizarTicket()">
+            <option value="pvp">💰 Precio Público (PVP)</option>
+            <option value="p15">🏷️ Descuento del 15%</option>
+            <option value="p25">🏷️ Descuento del 25%</option>
+            <option value="p35">🏷️ Descuento del 35%</option>
+            <option value="p42">🏷️ Descuento del 42%</option>
+            <option value="p50">💎 Descuento del 50%</option>
+        </select>
+
+        <h2 style="margin: 5px 0; color: #2e7d32; text-align: right;">Total: $<span id="total">0.00</span></h2>
+
+        <button class="btn-compartir" onclick="compartirWhatsApp()">
+            <span>📲 Enviar por WhatsApp</span>
+        </button>
+        <button class="btn-limpiar" onclick="limpiar()">🗑️ Borrar Todo</button>
+    </div>
+    </div>
+
+    <script>
+        let carrito = [];
+
+        function agregar(nombre, pvp, p15, p25, p35, p42, p50) {
+            carrito.push({ nombre, pvp, p15, p25, p35, p42, p50 });
+            actualizarTicket();
+        }
+
+        function actualizarTicket() {
+            let nivel = document.getElementById('nivel-precio').value;
+            let total = 0;
+            let htmlLista = "";
+
+            carrito.forEach((prod) => {
+                let precioCorrecto = prod[nivel];
+                total += precioCorrecto;
+
+                htmlLista += `
+                <li class="item-ticket">
+                    <span>${prod.nombre}</span>
+                    <b>$${precioCorrecto.toFixed(2)}</b>
+                </li>`;
+            });
+
+            if (carrito.length === 0) {
+                htmlLista = "<li style='text-align:center; color:#888;'>Toca los productos arriba para agregarlos</li>";
+            }
+
+            document.getElementById('lista-ticket').innerHTML = htmlLista;
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        function limpiar() {
+            carrito = [];
+            actualizarTicket();
+        }
+
+        // FUNCIÓN CLAVE: COMPARTIR MEDIANTE API NATIVA DEL CELULAR
+        function compartirWhatsApp() {
+            if (carrito.length === 0) {
+                alert("Primero agrega productos al carrito.");
+                return;
+            }
+
+            let nivelLabel = document.getElementById('nivel-precio').options[document.getElementById('nivel-precio').selectedIndex].text;
+            let nivelKey = document.getElementById('nivel-precio').value;
+            let total = document.getElementById('total').innerText;
+
+            let mensaje = "📋 *COTIZACIÓN HERBALIFE ECUADOR*\n";
+            mensaje += "------------------------------\n";
+            mensaje += "*Nivel:* " + nivelLabel + "\n\n";
+
+            carrito.forEach((prod, index) => {
+                mensaje += (index + 1) + ". " + prod.nombre + ": *$" + prod[nivelKey].toFixed(2) + "*\n";
+            });
+
+            mensaje += "\n------------------------------\n";
+            mensaje += "🚀 *TOTAL A PAGAR: $" + total + "*\n";
+            mensaje += "------------------------------\n";
+            mensaje += "Generado por: Cotizador Herbalife 🍃";
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi Cotización Herbalife',
+                    text: mensaje
+                })
+                .then(() => console.log('Compartido con éxito'))
+                .catch((error) => console.log('Error al compartir', error));
+            } else {
+                // Fallback para navegadores antiguos
+                let url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+                window.open(url, "_blank");
+            }
+        }
+
+        actualizarTicket();
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').then(reg => {
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  alert('Nueva actualización disponible. Reinicia la app.');
+                  location.reload();
+                }
+              };
+            };
+          });
+        });
+      }
+    </script>
+</body>
+</html>
