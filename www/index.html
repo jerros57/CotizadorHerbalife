@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Herbalife Ecuador 2026</title>
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 10px; background-color: #f4fce3; color: #333; margin: 0;}
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .save-btn { font-size: 32px; cursor: pointer; background:none; border:none; }
+
+        .historial { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0 20px 0; }
+        .hist-item {
+            width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+            background: #e8f5e9; border: 3px solid #1b5e20; border-radius: 14px;
+            font-size: 22px; font-weight: bold; color: #1b5e20; cursor: pointer;
+        }
+        .hist-item.active { background: #1b5e20; color: white; }
+
+        h3.categoria { color: #4caf50; border-bottom: 2px solid #4caf50; padding-bottom: 5px; margin-top: 20px;}
+        .catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; padding-bottom: 10px;}
+        .producto { position: relative; background: white; border: 2px solid #7cb342; padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+        .producto:active { transform: scale(0.95); border-color: #2e7d32; }
+        .producto img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; background-color: #eee;}
+        .nombre-prod { font-size: 11px; font-weight: bold; margin-top: 5px; display: block; height: 42px; overflow: hidden; line-height: 1.2;}
+        .contador-producto { position: absolute; top: -6px; left: -6px; background:#2e7d32; color:white; font-size:12px; font-weight:bold; padding:3px 8px; border-radius:50%; display:none; z-index:10; min-width:18px; text-align:center;}
+        .btn-quitar-producto { position: absolute; top: -10px; right: -10px; background: #c62828; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; font-weight: bold; padding: 0; margin: 0; cursor: pointer; line-height: 1.1; display: none; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,0.4); pointer-events: auto; }
+        .btn-quitar-producto:active { transform: scale(0.9); }
+
+        .ticket-container { background: white; padding: 15px; border: 2px dashed #333; margin: 20px auto; max-width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
+        #lista-ticket { list-style: none; padding: 0; margin: 0 0 15px 0; font-size: 13px;}
+        .item-ticket { display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding: 6px 0;}
+
+        .controles { display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto; }
+        select { padding: 10px; border-radius: 5px; border: 2px solid #7cb342; font-weight: bold; background: #e8f5e9;}
+        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer;}
+        .btn-compartir { background: #25D366; color: white; }
+        .btn-limpiar { background: #e74c3c; color: white; }
+
+        /* --- Header de roles --- */
+        .topbar { display: flex; justify-content: flex-end; max-width: 320px; margin: 0 auto 8px auto; }
+        .btn-rol { background: #2e7d32; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; margin: 0; }
+        .btn-rol.activo { background: #c62828; }
+
+        /* --- Modal PIN y Tutorial --- */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+        .modal-overlay.visible { display: flex; }
+        .modal-box { background: white; border-radius: 12px; padding: 20px; width: 260px; text-align: center; }
+        .modal-box h3 { margin-top: 0; color: #2e7d32; }
+        .modal-box input { width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px; text-align: center; letter-spacing: 3px; border: 2px solid #7cb342; border-radius: 6px; margin-bottom: 10px; }
+        .fila-botones { display: flex; gap: 8px; }
+        .fila-botones button { flex: 1; margin-top: 0; }
+        .btn-cancelar { background: #e0e0e0; color: #333; }
+        .btn-confirmar { background: #4caf50; color: white; }
+        .modal-box-tutorial { background: white; border-radius: 12px; padding: 20px; width: 300px; max-height: 80vh; overflow-y: auto; text-align: left; }
+        .modal-box-tutorial h3 { margin-top: 0; color: #2e7d32; text-align: center; }
+        .modal-box-tutorial h4 { color: #c62828; margin: 12px 0 4px 0; font-size: 13px; }
+        .modal-box-tutorial p { font-size: 12px; line-height: 1.4; margin: 4px 0; }
+
+        /* --- Panel vendedor --- */
+        .panel-vendedor { background: white; border: 2px solid #c62828; border-radius: 10px; padding: 12px; margin: 10px auto; max-width: 320px; }
+        .panel-vendedor h3 { margin: 0 0 8px 0; color: #c62828; text-align: center; }
+        .panel-vendedor .expira { text-align: center; font-size: 12px; color: #795548; margin-bottom: 10px; }
+        .fila-tier { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .fila-tier span { width: 42px; font-weight: bold; font-size: 12px; color: #2e7d32; }
+        .fila-tier input { flex: 1; padding: 6px; border: 1px solid #aaa; border-radius: 4px; text-transform: uppercase; font-weight: bold; text-align: center; letter-spacing: 2px; font-size: 12px; }
+        .fila-tier button { padding: 6px 8px; margin: 0; font-size: 11px; background: #eeeeee; border-radius: 4px; border: none; }
+        .btn-renovar-todo { background: #c62828; color: white; width: 100%; margin-top: 8px; }
+        .btn-cerrar-sesion { background: #795548; color: white; width: 100%; margin-top: 8px; }
+
+        /* --- Selector de nivel cliente --- */
+        #selector-nivel-cliente-wrap select { width: 100%; margin-top: 2px; font-size: 13px; }
+
+        /* --- Caja de código cliente --- */
+        .caja-codigo { background: #fffde7; border: 2px solid #fbc02d; border-radius: 8px; padding: 10px; margin: 8px 0; }
+        .caja-codigo label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 6px; color: #795548; }
+        .fila-codigo { display: flex; gap: 6px; }
+        .fila-codigo input { flex: 1; padding: 8px; border-radius: 4px; border: 2px solid #fbc02d; text-transform: uppercase; font-weight: bold; letter-spacing: 2px; text-align: center; font-size: 14px; }
+        .btn-aplicar-codigo { background: #fbc02d; color: #333; padding: 0 12px; border-radius: 4px; margin: 0; }
+        .mensaje-codigo { font-size: 11px; margin-top: 6px; font-weight: bold; min-height: 14px; }
+        .mensaje-codigo.ok { color: #2e7d32; }
+        .mensaje-codigo.error { color: #c62828; }
+        .badge-descuento { display: inline-block; background: #2e7d32; color: white; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 20px; margin-bottom: 6px; }
+
+        @media print {
+            .controles, select, button { display: none !important; }
+            .topbar, .panel-vendedor, .modal-overlay, .caja-codigo { display: none !important; }
+        }
+    </style>
+<body>
+
+    <div class="header">
+        <h1>🍃 Catálogo Ecuador 2026</h1>
+        <span class="save-btn" onclick="guardarCotizacionActual()">💾</span>
+    </div>
+
+    <div class="topbar">
+        <button id="btn-rol" class="btn-rol" onclick="clickBotonRol()">🔒 Modo Vendedor</button>
+    </div>
+
+    <div class="modal-overlay" id="modal-pin">
+        <div class="modal-box">
+            <h3>🔒 Acceso Vendedor</h3>
+            <input type="password" id="input-pin" maxlength="4" placeholder="Código">
+            <div class="fila-botones">
+                <button class="btn-cancelar" onclick="cerrarModalPin()">Cancelar</button>
+                <button class="btn-confirmar" onclick="confirmarPin()">Ingresar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-tutorial">
+        <div class="modal-box-tutorial">
+            <h3>👋 Bienvenido</h3>
+            <p>Esta guía aparece cada vez que abres la app para que sepas cómo probarla.</p>
+
+            <h4>🛒 Modo Cliente (con el que siempre inicia)</h4>
+            <p>Al abrir la app nunca sabe si eres cliente o vendedor: siempre comienza en modo Cliente. Toca los productos para armar tu ticket.</p>
+
+            <h4>📼 Guardar Cotización</h4>
+            <p>Con el botón 💾 arriba se crea un "casete" (número) con esa lista de productos que queda guardada en el dispositivo.</p>
+
+            <h4>🏷️ Código de descuento</h4>
+            <p>Si el vendedor te da un código de 4 caracteres, escríbelo en la casilla amarilla. Ese descuento se aplica y puedes cambiar entre niveles inferiores cuando quieras con el selector. Para subirde nivel necesitas un nuevo código.</p>
+
+            <h4>🔒 Modo Vendedor</h4>
+            <p>Toca "🔒 Modo Vendedor" arriba e ingresa el código de acceso (rota cada 30 min, primera vez es <b>2026</b>). Tendrás acceso a todos los descuentos, panel de códigos y más.</p>
+
+            <button class="btn-confirmar" style="width:100%;margin-top:14px;" onclick="cerrarTutorial()">Entendido, comenzar</button>
+        </div>
+    </div>
+
+    <div id="historial" class="historial"></div>
+
+    <h3 class="categoria">Nutrición Interna</h3>
+    <div class="catalogo">
+        <div class="producto" onclick="agregar(0)"><span class="contador-producto" id="cont-0"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(0, event)">✕</button><img src="img/aloe.png" alt=""><span class="nombre-prod">Aloe Concentrado</span></div>
+        <div class="producto" onclick="agregar(1)"><span class="contador-producto" id="cont-1"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(1, event)">✕</button><img src="img/barras.png" alt=""><span class="nombre-prod">Barras de Proteína</span></div>
+        <div class="producto" onclick="agregar(2)"><span class="contador-producto" id="cont-2"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(2, event)">✕</button><img src="img/batido.png" alt=""><span class="nombre-prod">Batidos Nutricional F1</span></div>
+        <div class="producto" onclick="agregar(3)"><span class="contador-producto" id="cont-3"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(3, event)">✕</button><img src="img/betahearth.png" alt=""><span class="nombre-prod">Betahearth</span></div>
+        <div class="producto" onclick="agregar(4)"><span class="contador-producto" id="cont-4"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(4, event)">✕</button><img src="img/beverage.png" alt=""><span class="nombre-prod">Beverage Mix</span></div>
+        <div class="producto" onclick="agregar(5)"><span class="contador-producto" id="cont-5"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(5, event)">✕</button><img src="img/colageno.png" alt=""><span class="nombre-prod">Colágeno</span></div>
+        <div class="producto" onclick="agregar(6)"><span class="contador-producto" id="cont-6"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(6, event)">✕</button><img src="img/cr7.png" alt=""><span class="nombre-prod">CR7 Drive</span></div>
+        <div class="producto" onclick="agregar(7)"><span class="contador-producto" id="cont-7"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(7, event)">✕</button><img src="img/fibra.png" alt=""><span class="nombre-prod">Fibra Manzana/Guayaba</span></div>
+        <div class="producto" onclick="agregar(8)"><span class="contador-producto" id="cont-8"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(8, event)">✕</button><img src="img/golden.png" alt=""><span class="nombre-prod">Golden Beverage</span></div>
+        <div class="producto" onclick="agregar(9)"><span class="contador-producto" id="cont-9"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(9, event)">✕</button><img src="img/herbalifeline.png" alt=""><span class="nombre-prod">Herbalifeline</span></div>
+        <div class="producto" onclick="agregar(10)"><span class="contador-producto" id="cont-10"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(10, event)">✕</button><img src="img/immunity.png" alt=""><span class="nombre-prod">Immunity Essentials</span></div>
+        <div class="producto" onclick="agregar(11)"><span class="contador-producto" id="cont-11"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(11, event)">✕</button><img src="img/liftoff.png" alt=""><span class="nombre-prod">Liftoff Polvo Sobres</span></div>
+        <div class="producto" onclick="agregar(12)"><span class="contador-producto" id="cont-12"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(12, event)">✕</button><img src="img/memory.png" alt=""><span class="nombre-prod">Memory Armor</span></div>
+        <div class="producto" onclick="agregar(13)"><span class="contador-producto" id="cont-13"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(13, event)">✕</button><img src="img/multivitaminico.png" alt=""><span class="nombre-prod">Multivitamínico F2</span></div>
+        <div class="producto" onclick="agregar(14)"><span class="contador-producto" id="cont-14"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(14, event)">✕</button><img src="img/niteworks.png" alt=""><span class="nombre-prod">Niteworks</span></div>
+        <div class="producto" onclick="agregar(15)"><span class="contador-producto" id="cont-15"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(15, event)">✕</button><img src="img/nrg.png" alt=""><span class="nombre-prod">Té N-R-G</span></div>
+        <div class="producto" onclick="agregar(16)"><span class="contador-producto" id="cont-16"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(16, event)">✕</button><img src="img/nutrisoup.png" alt=""><span class="nombre-prod">Nutri Soup</span></div>
+        <div class="producto" onclick="agregar(17)"><span class="contador-producto" id="cont-17"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(17, event)">✕</button><img src="img/nutrimuffin.png" alt=""><span class="nombre-prod">Nutri Muffin</span></div>
+        <div class="producto" onclick="agregar(18)"><span class="contador-producto" id="cont-18"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(18, event)">✕</button><img src="img/pdm.png" alt=""><span class="nombre-prod">PDM Crema de Maní</span></div>
+        <div class="producto" onclick="agregar(19)"><span class="contador-producto" id="cont-19"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(19, event)">✕</button><img src="img/ppp.png" alt=""><span class="nombre-prod">PPP</span></div>
+        <div class="producto" onclick="agregar(20)"><span class="contador-producto" id="cont-20"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(20, event)">✕</button><img src="img/probiotics.png" alt=""><span class="nombre-prod">Probiotics</span></div>
+        <div class="producto" onclick="agregar(21)"><span class="contador-producto" id="cont-21"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(21, event)">✕</button><img src="img/rebuild.png" alt=""><span class="nombre-prod">Rebuild H24</span></div>
+        <div class="producto" onclick="agregar(22)"><span class="contador-producto" id="cont-22"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(22, event)">✕</button><img src="img/relaxation.png" alt=""><span class="nombre-prod">Relaxation Tea</span></div>
+        <div class="producto" onclick="agregar(23)"><span class="contador-producto" id="cont-23"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(23, event)">✕</button><img src="img/te100.png" alt=""><span class="nombre-prod">Té 100gr</span></div>
+        <div class="producto" onclick="agregar(24)"><span class="contador-producto" id="cont-24"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(24, event)">✕</button><img src="img/techai.png" alt=""><span class="nombre-prod">Té Chai</span></div>
+        <div class="producto" onclick="agregar(25)"><span class="contador-producto" id="cont-25"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(25, event)">✕</button><img src="img/xtracal.png" alt=""><span class="nombre-prod">Xtra-Cal (Calcio)</span></div>
+        <div class="producto" onclick="agregar(26)"><span class="contador-producto" id="cont-26"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(26, event)">✕</button><img src="img/nightmode.png" alt=""><span class="nombre-prod">Night Mode</span></div>
+    </div>
+
+    <h3 class="categoria">Nutrición Externa</h3>
+    <div class="catalogo">
+        <div class="producto" onclick="agregar(27)"><span class="contador-producto" id="cont-27"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(27, event)">✕</button><img src="img/cremadia.png" alt=""><span class="nombre-prod">Crema Humectante Día</span></div>
+        <div class="producto" onclick="agregar(28)"><span class="contador-producto" id="cont-28"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(28, event)">✕</button><img src="img/gelcorporal.png" alt=""><span class="nombre-prod">Gel Refrescante Corporal</span></div>
+        <div class="producto" onclick="agregar(29)"><span class="contador-producto" id="cont-29"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(29, event)">✕</button><img src="img/aloecrema.png" alt=""><span class="nombre-prod">Herbal Aloe Crema</span></div>
+        <div class="producto" onclick="agregar(30)"><span class="contador-producto" id="cont-30"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(30, event)">✕</button><img src="img/skinexfoliante.png" alt=""><span class="nombre-prod">Skin Exfoliante</span></div>
+        <div class="producto" onclick="agregar(31)"><span class="contador-producto" id="cont-31"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(31, event)">✕</button><img src="img/skinlimpiador.png" alt=""><span class="nombre-prod">Skin Limpiador Cítrico</span></div>
+        <div class="producto" onclick="agregar(32)"><span class="contador-producto" id="cont-32"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(32, event)">✕</button><img src="img/skinmascarilla.png" alt=""><span class="nombre-prod">Skin Mascarilla Arcilla</span></div>
+        <div class="producto" onclick="agregar(33)"><span class="contador-producto" id="cont-33"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(33, event)">✕</button><img src="img/skinserum.png" alt=""><span class="nombre-prod">Skin Serum</span></div>
+        <div class="producto" onclick="agregar(34)"><span class="contador-producto" id="cont-34"><span class="numero">0</span></span><button class="btn-quitar-producto" onclick="decrementarProducto(34, event)">✕</button><img src="img/skintonificador.png" alt=""><span class="nombre-prod">Skin Tonificador Hierbas</span></div>
+    </div>
+
+    <div class="panel-vendedor" id="panel-vendedor" style="display:none;">
+        <h3>🛠️ Panel de Vendedor</h3>
+        <div class="expira">Códigos vigentes por: <b id="tiempo-restante">--:--</b></div>
+        <div id="lista-tiers"></div>
+        <button class="btn-cerrar-sesion" onclick="cerrarSesionVendedor()">🚪 Cerrar sesión (volver a Cliente)</button>
+    </div>
+
+    <div class="ticket-container">
+        <h3>🧾 Cotización Actual</h3>
+
+        <div class="caja-codigo" id="caja-codigo">
+            <div id="badge-descuento-wrap"></div>
+            <label>🏷️ ¿Tienes un código de descuento?</label>
+            <div class="fila-codigo">
+                <input type="text" id="input-codigo-cliente" maxlength="4" placeholder="XXXX">
+                <button class="btn-aplicar-codigo" onclick="aplicarCodigoCliente()">Aplicar</button>
+            </div>
+            <div class="mensaje-codigo" id="mensaje-codigo"></div>
+            <div id="selector-nivel-cliente-wrap"></div>
+        </div>
+
+        <ul id="lista-ticket">
+            <li style='text-align:center; color:#888;'>Toca los productos arriba para agregarlos</li>
+        </ul>
+    </div>
+
+    <div class="controles">
+        <select id="nivel-precio" onchange="cambiarNivelVendedor()">
+            <option value="0">💰 PVP</option>
+            <option value="1">🏷️ 15%</option>
+            <option value="2">🏷️ 25%</option>
+            <option value="3">🏷️ 35%</option>
+            <option value="4">🏷️ 42%</option>
+            <option value="5">💎 50%</option>
+        </select>
+
+        <div style="display:flex;justify-content:space-between;margin:12px 0;font-weight:bold;">
+            <span>Pts: <span id="total-puntos">0.00</span></span>
+            <span>Total: $<span id="total">0.00</span></span>
+        </div>
+
+        <button class="btn-compartir" onclick="compartirWhatsApp()">📲 Enviar por WhatsApp</button>
+        <button class="btn-limpiar" onclick="limpiar()">🗑️ Limpiar Todo</button>
+    </div>
+
+    <script>
+        const productos = [
+            {n:"Aloe Concentrado", p:[55.00,47.73,42.87,38.02,34.62,30.74], pts:26.85},
+            {n:"Barras Proteína", p:[42.73,39.22,36.87,34.52,32.88,31.00], pts:16.15},
+            {n:"Batido F1", p:[57.87,50.21,45.11,40.01,36.43,32.35], pts:25.75},
+            {n:"Betahearth", p:[63.15,55.08,49.69,44.31,40.55,36.24], pts:27.00},
+            {n:"Beverage Mix", p:[50.08,44.07,40.05,36.04,33.24,30.03], pts:23.00},
+            {n:"Colágeno", p:[61.99,54.07,48.80,43.53,39.83,35.62], pts:27.80},
+            {n:"CR7 Drive", p:[41.76,36.74,33.39,30.04,27.70,25.02], pts:26.75},
+            {n:"Fibra Activa", p:[53.50,46.42,41.70,36.98,33.67,29.90], pts:24.65},
+            {n:"Golden Beverage", p:[35.51,31.05,28.08,25.11,23.03,20.65], pts:15.00},
+            {n:"Herbalifeline", p:[53.80,46.68,41.93,37.19,33.86,30.07], pts:27.70},
+            {n:"Immunity Essentials", p:[43.30,37.85,34.21,30.58,28.03,25.13], pts:18.75},
+            {n:"Liftoff Sobres", p:[108.41,94.07,84.50,74.94,68.24,60.59], pts:51.45},
+            {n:"Memory Armor", p:[44.00,38.39,34.65,30.91,28.29,25.30], pts:21.70},
+            {n:"Multivitamínico", p:[24.16,20.96,18.83,16.70,15.21,13.50], pts:10.75},
+            {n:"Niteworks", p:[68.39,59.89,54.22,48.55,44.58,40.04], pts:36.75},
+            {n:"Té N-R-G", p:[28.43,24.67,22.16,19.65,17.89,15.89], pts:15.85},
+            {n:"Nutri Soup", p:[42.04,36.67,33.08,29.49,26.98,24.12], pts:18.35},
+            {n:"Nutri Muffin", p:[46.04,39.95,35.88,31.82,28.98,25.73], pts:20.50},
+            {n:"PDM Crema de Maní", p:[74.70,64.63,58.34,52.04,47.64,42.60], pts:33.10},
+            {n:"PPP", p:[42.12,36.55,32.84,29.12,26.52,23.55], pts:19.30},
+            {n:"Probiotics", p:[46.26,40.14,36.06,31.98,29.12,25.86], pts:22.00},
+            {n:"Rebuild H24", p:[92.78,83.43,77.20,70.96,66.60,61.61], pts:39.20},
+            {n:"Relaxation Tea", p:[53.88,47.16,42.68,38.20,35.06,31.48], pts:24.54},
+            {n:"Té 100gr", p:[67.42,58.50,52.56,46.61,42.44,37.69], pts:37.60},
+            {n:"Té Chai", p:[38.66,33.55,30.14,26.72,24.34,21.61], pts:21.45},
+            {n:"Xtra-Cal", p:[24.16,20.96,18.83,16.70,15.21,13.50], pts:11.00},
+            {n:"Night Mode", p:[38.66,33.62,31.42,28.52,26.42,24.17], pts:16.85},
+            {n:"Crema Humectante", p:[63.11,54.76,49.19,43.62,39.73,35.27], pts:30.55},
+            {n:"Gel Refrescante", p:[19.38,16.81,15.10,13.39,12.20,10.83], pts:8.90},
+            {n:"Herbal Aloe Crema", p:[19.38,16.81,15.10,13.39,12.20,10.83], pts:8.90},
+            {n:"Skin Exfoliante", p:[29.13,25.27,22.70,20.13,18.33,16.28], pts:14.10},
+            {n:"Skin Limpiador", p:[37.21,32.29,29.01,25.72,23.42,20.80], pts:18.00},
+            {n:"Skin Mascarilla", p:[31.61,27.43,24.64,21.85,19.90,17.67], pts:15.25},
+            {n:"Skin Serum", p:[83.80,72.71,65.32,57.92,52.75,46.83], pts:40.55},
+            {n:"Skin Tonificador", p:[28.22,24.49,22.00,19.51,17.76,15.77], pts:13.65}
+        ];
+
+        let carrito = [];
+        let cotizacionesGuardadas = JSON.parse(localStorage.getItem('cotizacionesHerbalife')) || [];
+        let cotizacionActualIndex = -1;
+
+        function agregar(i) {
+            carrito.push(productos[i]);
+            actualizarContador(i);
+            actualizarTicket();
+        }
+
+        function decrementarProducto(i, event) {
+            if (event) event.stopPropagation();
+            let nombreProducto = productos[i].n;
+            let indiceEnCarrito = carrito.findIndex(p => p.n === nombreProducto);
+            if (indiceEnCarrito >= 0) {
+                carrito.splice(indiceEnCarrito, 1);
+                actualizarContador(i);
+                actualizarTicket();
+            }
+        }
+
+        function actualizarContador(i) {
+            let cantidad = carrito.filter(p => p.n === productos[i].n).length;
+            let el = document.getElementById('cont-' + i);
+            if (el) {
+                let numeroSpan = el.querySelector('.numero');
+                let producto = el.closest('.producto');
+                let btnQuitar = producto ? producto.querySelector('.btn-quitar-producto') : null;
+                if (numeroSpan) numeroSpan.textContent = cantidad;
+                if (btnQuitar) btnQuitar.style.display = cantidad > 0 ? 'block' : 'none';
+                el.style.display = cantidad > 0 ? 'block' : 'none';
+            }
+        }
+
+        function actualizarContadorForAll() {
+            for (let i = 0; i < productos.length; i++) actualizarContador(i);
+        }
+
+        function actualizarTicket() {
+            let niv = parseInt(document.getElementById('nivel-precio').value);
+            if (niv.toString() !== obtenerNivelActual()) {
+                niv = parseInt(obtenerNivelActual());
+                document.getElementById('nivel-precio').value = niv;
+            }
+            let total = 0, ptsTotal = 0, html = "";
+
+            carrito.forEach(p => {
+                let precio = p.p[niv];
+                total += precio;
+                ptsTotal += p.pts || 0;
+                html += `<li class="item-ticket"><span>${p.n}</span><b>$${precio.toFixed(2)}</b></li>`;
+            });
+
+            document.getElementById('lista-ticket').innerHTML = carrito.length === 0
+                ? `<li style='text-align:center; color:#888;'>Toca los productos arriba para agregarlos</li>`
+                : html;
+
+            document.getElementById('total').textContent = total.toFixed(2);
+            document.getElementById('total-puntos').textContent = ptsTotal.toFixed(2);
+            renderBadgeDescuento();
+        }
+
+        function guardarCotizacionActual() {
+            if (carrito.length === 0) return alert("Agrega productos primero");
+            if (cotizacionActualIndex === -1 && cotizacionesGuardadas.length >= 5) {
+                return alert("Ya tienes 5 cotizaciones. Borra una primero.");
+            }
+            const cot = { items: JSON.parse(JSON.stringify(carrito)) };
+            if (cotizacionActualIndex >= 0) cotizacionesGuardadas[cotizacionActualIndex] = cot;
+            else {
+                cotizacionesGuardadas.push(cot);
+                cotizacionActualIndex = cotizacionesGuardadas.length - 1;
+            }
+            localStorage.setItem('cotizacionesHerbalife', JSON.stringify(cotizacionesGuardadas));
+            actualizarHistorial();
+        }
+
+        function actualizarHistorial() {
+            const cont = document.getElementById('historial');
+            cont.innerHTML = '';
+            cotizacionesGuardadas.forEach((_, i) => {
+                const div = document.createElement('div');
+                div.className = `hist-item ${i === cotizacionActualIndex ? 'active' : ''}`;
+                div.textContent = i + 1;
+                div.onclick = () => cargarCotizacion(i);
+                cont.appendChild(div);
+            });
+        }
+
+        function cargarCotizacion(i) {
+            cotizacionActualIndex = i;
+            carrito = JSON.parse(JSON.stringify(cotizacionesGuardadas[i].items));
+            actualizarContadorForAll();
+            actualizarTicket();
+            actualizarHistorial();
+        }
+
+        function limpiar() {
+            if (cotizacionActualIndex >= 0) {
+                cotizacionesGuardadas.splice(cotizacionActualIndex, 1);
+                localStorage.setItem('cotizacionesHerbalife', JSON.stringify(cotizacionesGuardadas));
+                cotizacionActualIndex = -1;
+            }
+            carrito = [];
+            actualizarContadorForAll();
+            actualizarTicket();
+            actualizarHistorial();
+        }
+
+        function compartirWhatsApp() {
+            if (carrito.length === 0) return alert("Agrega productos primero");
+            let niv = parseInt(document.getElementById('nivel-precio').value);
+            let label = document.getElementById('nivel-precio').options[niv].text;
+            let total = document.getElementById('total').textContent;
+            let ptos = document.getElementById('total-puntos').textContent;
+
+            let msg = "📋 *COTIZACIÓN HERBALIFE ECUADOR*\n------------------------------\n*Nivel:* " + label + "\n\n";
+            carrito.forEach((p, idx) => {
+                msg += (idx+1) + ". " + p.n + ": *$" + p.p[niv].toFixed(2) + "*\n";
+            });
+            msg += "\n------------------------------\n✨ *Puntos Totales:* " + ptos + " pts\n🚀 *TOTAL A PAGAR: $" + total + "*\nGenerado por Cotizador Herbalife 🍃";
+
+            if (navigator.share) navigator.share({title: "Cotización", text: msg});
+            else window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+        }
+
+        /* ============================================================
+           SISTEMA DUAL: CLIENTE / VENDEDOR
+        ============================================================ */
+        function esVendedor() {
+            return localStorage.getItem('ht_es_vendedor') === '1';
+        }
+
+        function clickBotonRol() {
+            if (esVendedor()) {
+                cerrarSesionVendedor();
+            } else {
+                abrirModalPin();
+            }
+        }
+
+        function abrirModalPin() {
+            document.getElementById('input-pin').value = '';
+            document.getElementById('modal-pin').classList.add('visible');
+            setTimeout(() => document.getElementById('input-pin').focus(), 50);
+        }
+
+        function cerrarModalPin() {
+            document.getElementById('modal-pin').classList.remove('visible');
+        }
+
+        function confirmarPin() {
+            const intento = document.getElementById('input-pin').value.toUpperCase().trim();
+            const lote = obtenerLoteCodigos();
+            if (intento && intento === lote.tiers['VEND']) {
+                localStorage.setItem('ht_es_vendedor', '1');
+                cerrarModalPin();
+                aplicarVistaSegunRol();
+            } else {
+                alert('❌ Código incorrecto');
+            }
+        }
+
+        function cerrarSesionVendedor() {
+            localStorage.removeItem('ht_es_vendedor');
+            aplicarVistaSegunRol();
+        }
+
+        function aplicarVistaSegunRol() {
+            const btnRol = document.getElementById('btn-rol');
+            const panel = document.getElementById('panel-vendedor');
+            const select = document.getElementById('nivel-precio');
+            const cajaCodigo = document.getElementById('caja-codigo');
+
+            if (esVendedor()) {
+                btnRol.textContent = '🔓 Salir de Vendedor';
+                btnRol.classList.add('activo');
+                panel.style.display = 'block';
+                select.style.display = 'block';
+                cajaCodigo.style.display = 'none';
+                select.value = obtenerNivelActual();
+                renderPanelVendedor();
+            } else {
+                btnRol.textContent = '🔒 Modo Vendedor';
+                btnRol.classList.remove('activo');
+                panel.style.display = 'none';
+                select.style.display = 'none';
+                cajaCodigo.style.display = 'block';
+                renderSelectorCliente();
+            }
+            actualizarTicket();
+        }
+
+        function cambiarNivelVendedor() {
+            const nivel = document.getElementById('nivel-precio').value;
+            guardarNivelActual(nivel);
+        }
+
+        /* ============================================================
+           NIVEL ACTUAL (persistente) Y NIVEL MÁXIMO (desbloqueado)
+        ============================================================ */
+        function obtenerNivelActual() {
+            return localStorage.getItem('ht_nivel_actual') || '0';
+        }
+
+        function guardarNivelActual(nivel) {
+            localStorage.setItem('ht_nivel_actual', nivel);
+            document.getElementById('nivel-precio').value = nivel;
+            actualizarTicket();
+            if (!esVendedor()) renderSelectorCliente();
+        }
+
+        function obtenerNivelMaximo() {
+            return localStorage.getItem('ht_nivel_maximo') || '0';
+        }
+
+        function actualizarNivelMaximoSiMayor(nivel) {
+            const actual = parseInt(obtenerNivelMaximo());
+            const nuevo = parseInt(nivel);
+            if (nuevo > actual) {
+                localStorage.setItem('ht_nivel_maximo', nivel);
+            }
+        }
+
+        function renderSelectorCliente() {
+            const cont = document.getElementById('selector-nivel-cliente-wrap');
+            if (!cont) return;
+            const maxIdx = parseInt(obtenerNivelMaximo());
+
+            if (maxIdx <= 0) {
+                cont.innerHTML = '';
+                return;
+            }
+
+            let opciones = '';
+            const labels = ['💰 PVP', '🏷️ 15%', '🏷️ 25%', '🏷️ 35%', '🏷️ 42%', '💎 50%'];
+            for (let i = 0; i <= maxIdx; i++) {
+                const sel = i.toString() === obtenerNivelActual() ? 'selected' : '';
+                opciones += `<option value="${i}" ${sel}>${labels[i]}</option>`;
+            }
+
+            cont.innerHTML = `<label style="display:block;font-size:11px;font-weight:bold;margin:8px 0 4px 0;color:#795548;">Tu nivel desbloqueado (puedes bajar cuando quieras):</label>
+            <select onchange="guardarNivelActual(this.value)">${opciones}</select>`;
+        }
+
+        function renderBadgeDescuento() {
+            const wrap = document.getElementById('badge-descuento-wrap');
+            const nivel = parseInt(obtenerNivelActual());
+            if (nivel === 0) {
+                wrap.innerHTML = '';
+            } else {
+                const labels = ['💰 PVP', '🏷️ 15%', '🏷️ 25%', '🏷️ 35%', '🏷️ 42%', '💎 50%'];
+                wrap.innerHTML = `<span class="badge-descuento">✅ ${labels[nivel]}</span>`;
+            }
+        }
+
+        /* ============================================================
+           CÓDIGOS DINÁMICOS (30 minutos)
+        ============================================================ */
+        const DURACION_MS = 30 * 60 * 1000;
+        const ALFABETO_CODIGO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+        function generarCodigoAleatorio() {
+            let c = '';
+            for (let i = 0; i < 4; i++) {
+                c += ALFABETO_CODIGO.charAt(Math.floor(Math.random() * ALFABETO_CODIGO.length));
+            }
+            return c;
+        }
+
+        function generarLoteNuevo(esPrimeraVez) {
+            const tiers = {};
+            for (let n = 1; n <= 5; n++) tiers[n] = generarCodigoAleatorio();
+            tiers['VEND'] = esPrimeraVez ? '2026' : generarCodigoAleatorio();
+            const lote = { exp: Date.now() + DURACION_MS, tiers };
+            localStorage.setItem('ht_codigos', JSON.stringify(lote));
+            return lote;
+        }
+
+        /* === CONSULTAR PANEL.HTML (MÁQUINA DE TICKETS) === */
+        const URL_PANEL = 'https://papaya-youtiao-6e2742.netlify.app/panel.html';
+        
+        async function leerCodigosDePanelHTML() {
+            try {
+                const response = await fetch(URL_PANEL);
+                if (!response.ok) throw new Error('Error');
+                // Leer localStorage del panel (en la misma sesión si es local, o desde GitHub si está hospedado)
+                // El panel guarda los códigos en localStorage con clave 'ht_codigos_panel'
+                return null; // Se maneja en la siguiente función
+            } catch (e) {
+                console.log('Sin conexión a panel');
+                return null;
+            }
+        }
+
+        async function sincronizarCodigosDesdePanel() {
+            try {
+                const response = await fetch(URL_PANEL);
+                if (response.ok) {
+                    const html = await response.text();
+                    // Buscar los códigos en localStorage del panel (si está en la misma página)
+                    // Para una sincronización correcta, necesitamos que panel.html exponga sus códigos
+                }
+            } catch (e) {
+                console.log('Sin conexión a panel');
+            }
+        }
+
+        function obtenerLoteCodigos() {
+            const raw = localStorage.getItem('ht_codigos_panel');
+            if (!raw) {
+                const lote = generarLoteNuevo();
+                localStorage.setItem('ht_codigos_panel', JSON.stringify(lote));
+                return lote;
+            }
+            try {
+                const lote = JSON.parse(raw);
+                if (!lote.exp || Date.now() > lote.exp || !lote.tiers) {
+                    const nuevo = generarLoteNuevo();
+                    localStorage.setItem('ht_codigos_panel', JSON.stringify(nuevo));
+                    return nuevo;
+                }
+                return lote;
+            } catch (e) {
+                const lote = generarLoteNuevo();
+                localStorage.setItem('ht_codigos_panel', JSON.stringify(lote));
+                return lote;
+            }
+        }
+
+
+        function renovarTodo() {
+            generarLoteNuevo(false);
+            renderPanelVendedor();
+        }
+
+        function renovarUno(nivel) {
+            const lote = obtenerLoteCodigos();
+            lote.tiers[nivel] = generarCodigoAleatorio();
+            localStorage.setItem('ht_codigos', JSON.stringify(lote));
+            renderPanelVendedor();
+        }
+
+        function editarCodigoManual(nivel, valor) {
+            const lote = obtenerLoteCodigos();
+            lote.tiers[nivel] = valor.toUpperCase().trim();
+            localStorage.setItem('ht_codigos', JSON.stringify(lote));
+        }
+
+        function renderPanelVendedor() {
+            const lote = obtenerLoteCodigos();
+            const cont = document.getElementById('lista-tiers');
+            let html = `
+            <div class="fila-tier">
+                <span>🔑 Vend.</span>
+                <input type="text" maxlength="4" value="${lote.tiers['VEND']}" readonly style="background:#f0f0f0; cursor:default;">
+            </div>`;
+            for (let n = 1; n <= 5; n++) {
+                html += `
+                <div class="fila-tier">
+                    <span>${n === 1 ? '15%' : n === 2 ? '25%' : n === 3 ? '35%' : n === 4 ? '42%' : '50%'}</span>
+                    <input type="text" maxlength="4" value="${lote.tiers[n]}" readonly style="background:#f0f0f0; cursor:default;">
+                </div>`;
+            }
+            cont.innerHTML = html;
+            actualizarTiempoRestante();
+        }
+
+        function actualizarTiempoRestante() {
+            const lote = obtenerLoteCodigos();
+            const restanteMs = Math.max(0, lote.exp - Date.now());
+            const min = Math.floor(restanteMs / 60000);
+            const seg = Math.floor((restanteMs % 60000) / 1000);
+            const el = document.getElementById('tiempo-restante');
+            if (el) el.textContent = `${String(min).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
+        }
+
+        setInterval(() => {
+            const antes = localStorage.getItem('ht_codigos');
+            obtenerLoteCodigos();
+            if (esVendedor()) {
+                const despues = localStorage.getItem('ht_codigos');
+                if (antes !== despues) renderPanelVendedor();
+                else actualizarTiempoRestante();
+            }
+        }, 1000);
+
+        /* ============================================================
+           CÓDIGO DEL CLIENTE
+        ============================================================ */
+        function aplicarCodigoCliente() {
+            const input = document.getElementById('input-codigo-cliente');
+            const mensaje = document.getElementById('mensaje-codigo');
+            const codigo = input.value.toUpperCase().trim();
+
+            if (!codigo) {
+                mensaje.textContent = 'Ingresa un código.';
+                mensaje.className = 'mensaje-codigo error';
+                return;
+            }
+
+            const lote = obtenerLoteCodigos();
+            let nivelEncontrado = -1;
+            for (let n = 1; n <= 5; n++) {
+                if (lote.tiers[n] === codigo) {
+                    nivelEncontrado = n;
+                    break;
+                }
+            }
+
+            if (nivelEncontrado >= 0) {
+                actualizarNivelMaximoSiMayor(nivelEncontrado.toString());
+                guardarNivelActual(nivelEncontrado.toString());
+                mensaje.textContent = `✅ Código válido. Descuento desbloqueado.`;
+                mensaje.className = 'mensaje-codigo ok';
+                input.value = '';
+            } else {
+                mensaje.textContent = '❌ Código inválido o vencido.';
+                mensaje.className = 'mensaje-codigo error';
+            }
+        }
+
+        /* ============================================================
+           TUTORIAL DEMO
+        ============================================================ */
+        function abrirTutorial() {
+            document.getElementById('modal-tutorial').classList.add('visible');
+        }
+
+        function cerrarTutorial() {
+            document.getElementById('modal-tutorial').classList.remove('visible');
+        }
+
+        // Inicializar
+        actualizarNivelMaximoSiMayor(obtenerNivelActual());
+        obtenerLoteCodigos();
+        aplicarVistaSegunRol();
+        renderBadgeDescuento();
+        actualizarHistorial();
+        actualizarTicket();
+        abrirTutorial();
+        
+        // Sincronizar códigos con panel.html cada segundo
+        setInterval(() => {
+            obtenerLoteCodigos();
+            actualizarTicket();
+            renderPanelVendedor();
+        }, 1000);
+    </script>
+
+    <!-- SERVICE WORKER - Detecta nuevas versiones y recarga automáticamente -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').then(reg => {
+            console.log('Service Worker registrado OK');
+
+            // Revisa si hay una actualización disponible
+            reg.onupdatefound = () => {
+              const installing = reg.installing;
+              installing.onstatechange = () => {
+                if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Hay nueva versión lista → recarga automática
+                  alert("✅ Nueva versión cargada. Recargando...");
+                  window.location.reload(true);
+                }
+              };
+            };
+
+          }).catch(err => {
+            console.error('Error al registrar SW:', err);
+          });
+        });
+      }
+    </script>
+
+</body>
+</html>
