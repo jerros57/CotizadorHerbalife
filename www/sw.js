@@ -3,7 +3,7 @@
 // CAMBIA EL NÚMERO DE VERSIÓN CADA VEZ QUE
 // ACTUALICES EL SITIO (ej: v3, v4, v5...)
 // ============================================
-const CACHE_NAME = 'herbalife-cache-v2';
+const CACHE_NAME = 'herbalife-cache-v2.1';
 
 const ARCHIVOS_A_CACHEAR = [
   './',
