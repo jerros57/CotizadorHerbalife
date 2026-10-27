@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Herbalife Ecuador 2026</title>
+    <title>Proximamente MultiCy 2026</title>
+    <link rel="icon" type="image/png" href="img/logo.png">
     <link rel="manifest" href="manifest.json">
 
     <style>
         body { font-family: 'Segoe UI', sans-serif; padding: 10px; background-color: #f4fce3; color: #333; margin: 0;}
         .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .header-title-box { display: flex; align-items: center; gap: 10px; }
+        .header-title-box img { width: 38px; height: 38px; border-radius: 8px; object-fit: contain; flex-shrink: 0; }
+        .header-title-box h1 { margin: 0; font-size: 20px; color: #1b5e20; line-height: 1.2; }
         .save-btn { font-size: 32px; cursor: pointer; background:none; border:none; }
 
         .historial { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0 20px 0; }
@@ -43,7 +47,10 @@
 <body>
 
     <div class="header">
-        <h1>🍃 Catálogo Ecuador 2026</h1>
+        <div class="header-title-box">
+            <img src="img/logo.png" alt="MultiCy Logo">
+            <h1>Proximamente MultiCy 2026</h1>
+        </div>
         <span class="save-btn" onclick="guardarCotizacionActual()">💾</span>
     </div>
 
@@ -265,11 +272,11 @@
             let total = document.getElementById('total').textContent;
             let ptos = document.getElementById('total-puntos').textContent;
 
-            let msg = "📋 *COTIZACIÓN HERBALIFE ECUADOR*\n------------------------------\n*Nivel:* " + label + "\n\n";
+            let msg = "📋 *COTIZACIÓN*\n------------------------------\n*Nivel:* " + label + "\n\n";
             carrito.forEach((p, idx) => {
                 msg += (idx+1) + ". " + p.n + ": *$" + p.p[niv].toFixed(2) + "*\n";
             });
-            msg += "\n------------------------------\n✨ *Puntos Totales:* " + ptos + " pts\n🚀 *TOTAL A PAGAR: $" + total + "*\nGenerado por Cotizador Herbalife 🍃";
+            msg += "\n------------------------------\n✨ *Puntos Totales:* " + ptos + " pts\n🚀 *TOTAL A PAGAR: $" + total + "*\nGenerado por MultiCy 2026 🍃";
 
             if (navigator.share) navigator.share({title: "Cotización", text: msg});
             else window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");

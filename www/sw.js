@@ -1,14 +1,17 @@
 // ============================================
-// sw.js - Service Worker Cotizador Herbalife
+// sw.js - Service Worker MultiCy 2026
 // CAMBIA EL NÚMERO DE VERSIÓN CADA VEZ QUE
 // ACTUALICES EL SITIO (ej: v3, v4, v5...)
 // ============================================
-const CACHE_NAME = 'herbalife-cache-v2.1';
+const CACHE_NAME = 'multicy-cache-v3.0';
 
 const ARCHIVOS_A_CACHEAR = [
   './',
   './index.html',
   './manifest.json',
+  './img/logo.png',
+  './img/icon-192.png',
+  './img/icon-512.png',
   './img/aloe.png',
   './img/barras.png',
   './img/batido.png',
