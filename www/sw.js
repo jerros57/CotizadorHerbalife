@@ -3,7 +3,7 @@
 // CAMBIA EL NÚMERO DE VERSIÓN CADA VEZ QUE
 // ACTUALICES EL SITIO (ej: v3, v4, v5...)
 // ============================================
-const CACHE_NAME = 'multicy-cache-v3.1';
+const CACHE_NAME = 'multicy-cache-v3.2';
 
 const ARCHIVOS_A_CACHEAR = [
   './',
@@ -47,6 +47,7 @@ const ARCHIVOS_A_CACHEAR = [
   './img/skinmascarilla.png',
   './img/skinserum.png',
   './img/skintonificador.png'
+  './img/cache.png',
 ];
 
 // --- INSTALACIÓN: guarda archivos en caché ---
