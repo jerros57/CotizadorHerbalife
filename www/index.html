@@ -3,122 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proximamente MultiCy 2026</title>
+<title>Con MultiCy 2026</title>
 <link rel="icon" type="image/png" href="img/logo.png">
 <link rel="manifest" href="manifest.json">
 <style>
-body { font-family: 'Segoe UI', sans-serif; padding: 10px; background-color: #f4fce3; color: #333; margin: 0;}
-.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.header-title-box { display: flex; align-items: center; gap: 10px; }
-.header-title-box img { width: 38px; height: 38px; border-radius: 8px; object-fit: contain; flex-shrink: 0; }
-.header-title-box h1 { margin: 0; font-size: 20px; color: #1b5e20; line-height: 1.2; }
-.save-btn { font-size: 32px; cursor: pointer; background:none; border:none; }
-.historial { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0 20px 0; }
-.hist-item {
-width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
-background: #e8f5e9; border: 3px solid #1b5e20; border-radius: 14px;
-font-size: 22px; font-weight: bold; color: #1b5e20; cursor: pointer;
+:root{
+  --verde:#2e8b57; --verde-osc:#1b5e20; --verde-claro:#e3f1e6;
+  --fondo:#f4fce3; --texto:#1c2024; --gris:#6b7680; --borde:#dfe5e9;
 }
-.hist-item.active { background: #1b5e20; color: white; }
-h3.categoria { color: #4caf50; border-bottom: 2px solid #4caf50; padding-bottom: 5px; margin-top: 20px;}
-.catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; padding-bottom: 10px;}
-.producto { position: relative; background: white; border: 2px solid #7cb342; padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
-.producto:active { transform: scale(0.95); border-color: #2e7d32; }
-.producto img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; background-color: #eee;}
-.nombre-prod { font-size: 11px; font-weight: bold; margin-top: 5px; display: block; height: 42px; overflow: hidden; line-height: 1.2;}
-.contador-producto { position: absolute; top: -6px; left: -6px; background:#2e7d32; color:white; font-size:12px; font-weight:bold; padding:3px 8px; border-radius:50%; display:none; z-index:10; min-width:18px; text-align:center;}
-.quitar-producto { position: absolute; top: -6px; right: -6px; background:#e53935; color:white; font-size:14px; font-weight:bold; width:23px; height:23px; line-height:23px; border-radius:50%; z-index:10; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.3); cursor:pointer; display:none;}
-.quitar-producto:active { transform: scale(0.9); }
-.ticket-container { background: white; padding: 15px; border: 2px dashed #333; margin: 20px auto; max-width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
-#lista-ticket { list-style: none; padding: 0; margin: 0 0 15px 0; font-size: 13px;}
-.item-ticket { display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding: 6px 0;}
-.controles { display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto; }
-select { padding: 10px; border-radius: 5px; border: 2px solid #7cb342; font-weight: bold; background: #e8f5e9;}
-button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer;}
-.btn-compartir { background: #25D366; color: white; }
-.btn-limpiar { background: #e74c3c; color: white; }
+*{ box-sizing:border-box; }
+body { font-family: 'Segoe UI', Roboto, sans-serif; padding: 14px 14px 40px 14px; background: var(--fondo); color: var(--texto); margin: 0; }
+.wrap{ max-width:560px; margin:0 auto; }
+
+/* Encabezado */
+.header { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 16px; }
+.header-title-box { display: flex; align-items: center; gap: 12px; }
+.header-title-box img { width: 40px; height: 40px; border-radius: 10px; object-fit: contain; flex-shrink: 0; }
+.header-title-box h1 { margin: 0; font-size: 21px; font-weight: 700; line-height: 1.2; }
+.save-btn { font-size: 26px; cursor: pointer; width:46px; height:46px; display:flex; align-items:center; justify-content:center; background:#fff; border:1px solid var(--borde); border-radius:50%; }
+.save-btn img{ width:28px; height:28px; object-fit:contain; }
+.save-btn:active{ transform:scale(.92); }
+
+/* Historial */
+.historial { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 14px 0; }
+.historial:empty{ display:none; }
+.hist-item {
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 2px solid var(--verde); border-radius: 14px;
+  font-size: 19px; font-weight: bold; color: var(--verde); cursor: pointer;
+}
+.hist-item.active { background: var(--verde); color: white; }
+
+/* Tarjeta de nivel */
+.card { background:#fff; border:1px solid var(--borde); border-radius:26px; padding:18px 20px; box-shadow:0 2px 10px rgba(20,40,60,.05); }
+.nivel-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.nivel-top h2{ margin:0; font-size:20px; font-weight:700; }
+.badge-nivel{ background:var(--verde-claro); color:var(--verde); font-weight:700; padding:8px 16px; border-radius:14px; font-size:16px; }
+.campo{ position:relative; }
+.campo label{ position:absolute; top:-9px; left:16px; background:#fff; padding:0 6px; font-size:12px; color:var(--gris); }
+select { width:100%; padding: 16px 18px; border-radius: 18px; border: 1px solid var(--borde); font-weight: 600; font-size:17px; background: #fff; color:var(--texto); }
+
+/* Categorías */
+h3.categoria { color: var(--verde); font-size:15px; letter-spacing:.3px; margin: 24px 4px 12px; text-transform:uppercase; }
+
+/* Tarjetas de producto */
+.lista-prod{ display:flex; flex-direction:column; gap:12px; }
+.card-prod{ display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--borde); border-radius:22px; padding:12px 14px; box-shadow:0 2px 8px rgba(20,40,60,.04); }
+.card-prod.activo{ border-color:var(--verde); }
+.thumb{ width:62px; height:72px; flex-shrink:0; border-radius:14px; background:var(--verde-claro); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.thumb img{ width:100%; height:100%; object-fit:contain; }
+.info{ flex:1; min-width:0; }
+.chip{ display:inline-block; background:var(--verde-claro); color:var(--verde); font-weight:600; font-size:12px; padding:3px 10px; border-radius:8px; }
+.nom{ font-size:16.5px; font-weight:700; margin:5px 0 3px; line-height:1.2; }
+.precio{ display:flex; align-items:baseline; gap:8px; }
+.precio b{ color:var(--verde); font-size:19px; }
+.precio span{ color:var(--gris); font-size:13px; font-weight:600; }
+.qty{ display:flex; align-items:center; gap:8px; }
+.qty .num{ min-width:22px; text-align:center; font-size:19px; font-weight:700; }
+.btn-q{ width:36px; height:36px; padding:0; border-radius:50%; background:#fff; font-size:24px; line-height:1; display:flex; align-items:center; justify-content:center; }
+.btn-q.minus{ border:2px solid #b4bcc3; color:#b4bcc3; }
+.btn-q.plus{ border:2px solid var(--verde); color:var(--verde); }
+.btn-q:active{ transform:scale(.9); }
+
+/* Cotización actual */
+.card h3{ margin:0 0 8px; font-size:18px; }
+
+/* Resumen fijo abajo */
+.resumen{ border-top:2px dashed var(--borde); margin-top:14px; padding-top:14px; }
+#lista-ticket { list-style: none; padding: 0; margin: 0; font-size: 14px;}
+.item-ticket { display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding: 8px 0;}
+.resumen-in{ max-width:560px; margin:0 auto; }
+.resumen h4{ margin:0 0 10px; font-size:19px; }
+.fila{ display:flex; justify-content:space-between; font-size:16px; margin:7px 0; }
+.fila.muted{ color:var(--gris); font-weight:600; }
+.linea{ border-top:1px solid var(--borde); margin:10px 0; }
+.fila.total{ align-items:center; font-size:26px; font-weight:800; margin:6px 0 14px; }
+.fila.total span:last-child{ color:var(--verde); }
+.botones{ display:flex; gap:12px; }
+button { border: none; font-weight: 700; font-size: 16px; cursor: pointer; font-family:inherit; }
+.btn-compartir, .btn-limpiar{ flex:1; padding:15px 10px; border-radius:20px; }
+.btn-compartir { background: #25D366; color: white; flex:1.3; }
+.btn-limpiar { background: #fff; color: var(--texto); border:1px solid var(--borde); }
 </style>
 </head>
 <body>
+<div class="wrap">
 
 <div class="header">
-<div class="header-title-box">
-<img src="img/logo.png" alt="MultiCy Logo">
-<h1>Proximamente MultiCy 2026</h1>
-</div>
-<span class="save-btn" onclick="guardarCotizacionActual()">💾</span>
+  <div class="header-title-box">
+    <img src="img/logo.png" alt="MultiCy Logo">
+    <h1>Con MultiCy 2026</h1>
+  </div>
+  <span class="save-btn" onclick="guardarCotizacionActual()"><img src="img/cache.png" alt="Guardar" onerror="this.replaceWith(document.createTextNode('💾'))"></span>
 </div>
 
 <div id="historial" class="historial"></div>
 
-<h3 class="categoria">Nutrición Interna</h3>
-<div class="catalogo">
-<div class="producto" onclick="agregar(0)"><span class="contador-producto" id="cont-0">0</span><span class="quitar-producto" id="quitx-0" onclick="event.stopPropagation(); quitar(0)">✕</span><img src="img/aloe.png" alt=""><span class="nombre-prod">Aloe Concentrado</span></div>
-<div class="producto" onclick="agregar(1)"><span class="contador-producto" id="cont-1">0</span><span class="quitar-producto" id="quitx-1" onclick="event.stopPropagation(); quitar(1)">✕</span><img src="img/barras.png" alt=""><span class="nombre-prod">Barras de Proteína</span></div>
-<div class="producto" onclick="agregar(2)"><span class="contador-producto" id="cont-2">0</span><span class="quitar-producto" id="quitx-2" onclick="event.stopPropagation(); quitar(2)">✕</span><img src="img/batido.png" alt=""><span class="nombre-prod">Batidos Nutricional F1</span></div>
-<div class="producto" onclick="agregar(3)"><span class="contador-producto" id="cont-3">0</span><span class="quitar-producto" id="quitx-3" onclick="event.stopPropagation(); quitar(3)">✕</span><img src="img/betahearth.png" alt=""><span class="nombre-prod">Betahearth</span></div>
-<div class="producto" onclick="agregar(4)"><span class="contador-producto" id="cont-4">0</span><span class="quitar-producto" id="quitx-4" onclick="event.stopPropagation(); quitar(4)">✕</span><img src="img/beverage.png" alt=""><span class="nombre-prod">Beverage Mix</span></div>
-<div class="producto" onclick="agregar(5)"><span class="contador-producto" id="cont-5">0</span><span class="quitar-producto" id="quitx-5" onclick="event.stopPropagation(); quitar(5)">✕</span><img src="img/colageno.png" alt=""><span class="nombre-prod">Colágeno</span></div>
-<div class="producto" onclick="agregar(6)"><span class="contador-producto" id="cont-6">0</span><span class="quitar-producto" id="quitx-6" onclick="event.stopPropagation(); quitar(6)">✕</span><img src="img/cr7.png" alt=""><span class="nombre-prod">CR7 Drive</span></div>
-<div class="producto" onclick="agregar(7)"><span class="contador-producto" id="cont-7">0</span><span class="quitar-producto" id="quitx-7" onclick="event.stopPropagation(); quitar(7)">✕</span><img src="img/fibra.png" alt=""><span class="nombre-prod">Fibra Manzana/Guayaba</span></div>
-<div class="producto" onclick="agregar(8)"><span class="contador-producto" id="cont-8">0</span><span class="quitar-producto" id="quitx-8" onclick="event.stopPropagation(); quitar(8)">✕</span><img src="img/golden.png" alt=""><span class="nombre-prod">Golden Beverage</span></div>
-<div class="producto" onclick="agregar(9)"><span class="contador-producto" id="cont-9">0</span><span class="quitar-producto" id="quitx-9" onclick="event.stopPropagation(); quitar(9)">✕</span><img src="img/herbalifeline.png" alt=""><span class="nombre-prod">Herbalifeline</span></div>
-<div class="producto" onclick="agregar(10)"><span class="contador-producto" id="cont-10">0</span><span class="quitar-producto" id="quitx-10" onclick="event.stopPropagation(); quitar(10)">✕</span><img src="img/immunity.png" alt=""><span class="nombre-prod">Immunity Essentials</span></div>
-<div class="producto" onclick="agregar(11)"><span class="contador-producto" id="cont-11">0</span><span class="quitar-producto" id="quitx-11" onclick="event.stopPropagation(); quitar(11)">✕</span><img src="img/liftoff.png" alt=""><span class="nombre-prod">Liftoff Polvo Sobres</span></div>
-<div class="producto" onclick="agregar(12)"><span class="contador-producto" id="cont-12">0</span><span class="quitar-producto" id="quitx-12" onclick="event.stopPropagation(); quitar(12)">✕</span><img src="img/memory.png" alt=""><span class="nombre-prod">Memory Armor</span></div>
-<div class="producto" onclick="agregar(13)"><span class="contador-producto" id="cont-13">0</span><span class="quitar-producto" id="quitx-13" onclick="event.stopPropagation(); quitar(13)">✕</span><img src="img/multivitaminico.png" alt=""><span class="nombre-prod">Multivitamínico F2</span></div>
-<div class="producto" onclick="agregar(14)"><span class="contador-producto" id="cont-14">0</span><span class="quitar-producto" id="quitx-14" onclick="event.stopPropagation(); quitar(14)">✕</span><img src="img/niteworks.png" alt=""><span class="nombre-prod">Niteworks</span></div>
-<div class="producto" onclick="agregar(15)"><span class="contador-producto" id="cont-15">0</span><span class="quitar-producto" id="quitx-15" onclick="event.stopPropagation(); quitar(15)">✕</span><img src="img/nrg.png" alt=""><span class="nombre-prod">Té N-R-G</span></div>
-<div class="producto" onclick="agregar(16)"><span class="contador-producto" id="cont-16">0</span><span class="quitar-producto" id="quitx-16" onclick="event.stopPropagation(); quitar(16)">✕</span><img src="img/nutrisoup.png" alt=""><span class="nombre-prod">Nutri Soup</span></div>
-<div class="producto" onclick="agregar(17)"><span class="contador-producto" id="cont-17">0</span><span class="quitar-producto" id="quitx-17" onclick="event.stopPropagation(); quitar(17)">✕</span><img src="img/nutrimuffin.png" alt=""><span class="nombre-prod">Nutri Muffin</span></div>
-<div class="producto" onclick="agregar(18)"><span class="contador-producto" id="cont-18">0</span><span class="quitar-producto" id="quitx-18" onclick="event.stopPropagation(); quitar(18)">✕</span><img src="img/pdm.png" alt=""><span class="nombre-prod">PDM Crema de Maní</span></div>
-<div class="producto" onclick="agregar(19)"><span class="contador-producto" id="cont-19">0</span><span class="quitar-producto" id="quitx-19" onclick="event.stopPropagation(); quitar(19)">✕</span><img src="img/ppp.png" alt=""><span class="nombre-prod">PPP</span></div>
-<div class="producto" onclick="agregar(20)"><span class="contador-producto" id="cont-20">0</span><span class="quitar-producto" id="quitx-20" onclick="event.stopPropagation(); quitar(20)">✕</span><img src="img/probiotics.png" alt=""><span class="nombre-prod">Probiotics</span></div>
-<div class="producto" onclick="agregar(21)"><span class="contador-producto" id="cont-21">0</span><span class="quitar-producto" id="quitx-21" onclick="event.stopPropagation(); quitar(21)">✕</span><img src="img/rebuild.png" alt=""><span class="nombre-prod">Rebuild H24</span></div>
-<div class="producto" onclick="agregar(22)"><span class="contador-producto" id="cont-22">0</span><span class="quitar-producto" id="quitx-22" onclick="event.stopPropagation(); quitar(22)">✕</span><img src="img/relaxation.png" alt=""><span class="nombre-prod">Relaxation Tea</span></div>
-<div class="producto" onclick="agregar(23)"><span class="contador-producto" id="cont-23">0</span><span class="quitar-producto" id="quitx-23" onclick="event.stopPropagation(); quitar(23)">✕</span><img src="img/te100.png" alt=""><span class="nombre-prod">Té 100gr</span></div>
-<div class="producto" onclick="agregar(24)"><span class="contador-producto" id="cont-24">0</span><span class="quitar-producto" id="quitx-24" onclick="event.stopPropagation(); quitar(24)">✕</span><img src="img/techai.png" alt=""><span class="nombre-prod">Té Chai</span></div>
-<div class="producto" onclick="agregar(25)"><span class="contador-producto" id="cont-25">0</span><span class="quitar-producto" id="quitx-25" onclick="event.stopPropagation(); quitar(25)">✕</span><img src="img/xtracal.png" alt=""><span class="nombre-prod">Xtra-Cal (Calcio)</span></div>
-<div class="producto" onclick="agregar(26)"><span class="contador-producto" id="cont-26">0</span><span class="quitar-producto" id="quitx-26" onclick="event.stopPropagation(); quitar(26)">✕</span><img src="img/nightmode.png" alt=""><span class="nombre-prod">Night Mode</span></div>
-<div class="producto" onclick="agregar(35)"><span class="contador-producto" id="cont-35">0</span><span class="quitar-producto" id="quitx-35" onclick="event.stopPropagation(); quitar(35)">✕</span><img src="img/creatina.png" alt=""><span class="nombre-prod">Creatina H24</span></div>
+<div class="card">
+  <div class="nivel-top">
+    <h2>Nivel / descuento</h2>
+    <span class="badge-nivel" id="badge-nivel">PVP</span>
+  </div>
+  <div class="campo">
+    <label for="nivel-precio">Nivel predefinido</label>
+    <select id="nivel-precio" onchange="actualizarTicket()">
+      <option value="0">💰 PVP</option>
+      <option value="1">🏷️ 15%</option>
+      <option value="2">🏷️ 25%</option>
+      <option value="3">🏷️ 35%</option>
+      <option value="4">🏷️ 42%</option>
+      <option value="5">💎 50%</option>
+    </select>
+  </div>
 </div>
+
+<h3 class="categoria">Nutrición Interna</h3>
+<div class="lista-prod" id="cat-interna"></div>
 
 <h3 class="categoria">Nutrición Externa</h3>
-<div class="catalogo">
-<div class="producto" onclick="agregar(27)"><span class="contador-producto" id="cont-27">0</span><span class="quitar-producto" id="quitx-27" onclick="event.stopPropagation(); quitar(27)">✕</span><img src="img/cremadia.png" alt=""><span class="nombre-prod">Crema Humectante Día</span></div>
-<div class="producto" onclick="agregar(28)"><span class="contador-producto" id="cont-28">0</span><span class="quitar-producto" id="quitx-28" onclick="event.stopPropagation(); quitar(28)">✕</span><img src="img/gelcorporal.png" alt=""><span class="nombre-prod">Gel Refrescante Corporal</span></div>
-<div class="producto" onclick="agregar(29)"><span class="contador-producto" id="cont-29">0</span><span class="quitar-producto" id="quitx-29" onclick="event.stopPropagation(); quitar(29)">✕</span><img src="img/aloecrema.png" alt=""><span class="nombre-prod">Herbal Aloe Crema</span></div>
-<div class="producto" onclick="agregar(30)"><span class="contador-producto" id="cont-30">0</span><span class="quitar-producto" id="quitx-30" onclick="event.stopPropagation(); quitar(30)">✕</span><img src="img/skinexfoliante.png" alt=""><span class="nombre-prod">Skin Exfoliante</span></div>
-<div class="producto" onclick="agregar(31)"><span class="contador-producto" id="cont-31">0</span><span class="quitar-producto" id="quitx-31" onclick="event.stopPropagation(); quitar(31)">✕</span><img src="img/skinlimpiador.png" alt=""><span class="nombre-prod">Skin Limpiador Cítrico</span></div>
-<div class="producto" onclick="agregar(32)"><span class="contador-producto" id="cont-32">0</span><span class="quitar-producto" id="quitx-32" onclick="event.stopPropagation(); quitar(32)">✕</span><img src="img/skinmascarilla.png" alt=""><span class="nombre-prod">Skin Mascarilla Arcilla</span></div>
-<div class="producto" onclick="agregar(33)"><span class="contador-producto" id="cont-33">0</span><span class="quitar-producto" id="quitx-33" onclick="event.stopPropagation(); quitar(33)">✕</span><img src="img/skinserum.png" alt=""><span class="nombre-prod">Skin Serum</span></div>
-<div class="producto" onclick="agregar(34)"><span class="contador-producto" id="cont-34">0</span><span class="quitar-producto" id="quitx-34" onclick="event.stopPropagation(); quitar(34)">✕</span><img src="img/skintonificador.png" alt=""><span class="nombre-prod">Skin Tonificador Hierbas</span></div>
+<div class="lista-prod" id="cat-externa"></div>
+
+
+<div class="card" style="margin-top:24px;">
+  <h3>🧾 Cotización Actual</h3>
+  <ul id="lista-ticket">
+    <li style='text-align:center; color:#888;'>Toca los productos arriba para agregarlos</li>
+  </ul>
+
+<!-- Resumen -->
+<div class="resumen">
+  <div class="resumen-in">
+    <h4>Resumen</h4>
+    <div class="fila"><span>Nivel</span><span id="resumen-nivel">PVP</span></div>
+    <div class="linea"></div>
+    <div class="fila muted"><span>Puntos totales</span><span><span id="total-puntos">0.00</span> VP</span></div>
+    <div class="fila total"><span>TOTAL</span><span>$<span id="total">0.00</span></span></div>
+    <div class="botones">
+      <button class="btn-limpiar" onclick="limpiar()">🗑️ Limpiar Todo</button>
+      <button class="btn-compartir" onclick="compartirWhatsApp()">📲 Enviar por WhatsApp</button>
+    </div>
+  </div>
+</div>
 </div>
 
-<div class="ticket-container">
-<h3>🧾 Cotización Actual</h3>
-<ul id="lista-ticket">
-<li style='text-align:center; color:#888;'>Toca los productos arriba para agregarlos</li>
-</ul>
-</div>
-
-<div class="controles">
-<select id="nivel-precio" onchange="actualizarTicket()">
-<option value="0">💰 PVP</option>
-<option value="1">🏷️ 15%</option>
-<option value="2">🏷️ 25%</option>
-<option value="3">🏷️ 35%</option>
-<option value="4">🏷️ 42%</option>
-<option value="5">💎 50%</option>
-</select>
-
-<div style="display:flex;justify-content:space-between;margin:12px 0;font-weight:bold;">
-<span>Pts: <span id="total-puntos">0.00</span></span>
-<span>Total: $<span id="total">0.00</span></span>
-</div>
-
-<button class="btn-compartir" onclick="compartirWhatsApp()">📲 Enviar por WhatsApp</button>
-<button class="btn-limpiar" onclick="limpiar()">🗑️ Limpiar Todo</button>
 </div>
 
 <script>
@@ -161,6 +188,44 @@ const productos = [
 {n:"Creatina H24", p:[28.08,24.49,22.09,19.70,18.03,16.12], pts:12.05}
 ];
 
+// Nombre visible e imagen de cada producto (mismo orden que "productos")
+const visual = [
+["Aloe Concentrado","aloe"],["Barras de Proteína","barras"],["Batidos Nutricional F1","batido"],["Betahearth","betahearth"],
+["Beverage Mix","beverage"],["Colágeno","colageno"],["CR7 Drive","cr7"],["Fibra Manzana/Guayaba","fibra"],
+["Golden Beverage","golden"],["Herbalifeline","herbalifeline"],["Immunity Essentials","immunity"],["Liftoff Polvo Sobres","liftoff"],
+["Memory Armor","memory"],["Multivitamínico F2","multivitaminico"],["Niteworks","niteworks"],["Té N-R-G","nrg"],
+["Nutri Soup","nutrisoup"],["Nutri Muffin","nutrimuffin"],["PDM Crema de Maní","pdm"],["PPP","ppp"],
+["Probiotics","probiotics"],["Rebuild H24","rebuild"],["Relaxation Tea","relaxation"],["Té 100gr","te100"],
+["Té Chai","techai"],["Xtra-Cal (Calcio)","xtracal"],["Night Mode","nightmode"],
+["Crema Humectante Día","cremadia"],["Gel Refrescante Corporal","gelcorporal"],["Herbal Aloe Crema","aloecrema"],
+["Skin Exfoliante","skinexfoliante"],["Skin Limpiador Cítrico","skinlimpiador"],["Skin Mascarilla Arcilla","skinmascarilla"],
+["Skin Serum","skinserum"],["Skin Tonificador Hierbas","skintonificador"],
+["Creatina H24","creatina"]
+];
+
+// Orden en pantalla
+const ordenInterna = [...Array(27).keys(), 35];   // 0..26 y Creatina
+const ordenExterna = [27,28,29,30,31,32,33,34];
+
+function crearTarjeta(i, categoria) {
+  return `<div class="card-prod" id="row-${i}">
+    <div class="thumb"><img src="img/${visual[i][1]}.png" alt="" onerror="this.style.visibility='hidden'"></div>
+    <div class="info">
+      <span class="chip">${categoria}</span>
+      <div class="nom">${visual[i][0]}</div>
+      <div class="precio"><b id="precio-${i}">$0.00</b><span>${productos[i].pts.toFixed(2)} VP</span></div>
+    </div>
+    <div class="qty">
+      <button class="btn-q minus" onclick="quitar(${i})">−</button>
+      <span class="num" id="cont-${i}">0</span>
+      <button class="btn-q plus" onclick="agregar(${i})">+</button>
+    </div>
+  </div>`;
+}
+
+document.getElementById('cat-interna').innerHTML = ordenInterna.map(i => crearTarjeta(i, 'Nutrición interna')).join('');
+document.getElementById('cat-externa').innerHTML = ordenExterna.map(i => crearTarjeta(i, 'Nutrición Externa')).join('');
+
 let carrito = [];
 let cotizacionesGuardadas = JSON.parse(localStorage.getItem('cotizacionesHerbalife')) || [];
 let cotizacionActualIndex = -1;
@@ -182,14 +247,9 @@ actualizarTicket();
 function actualizarContador(i) {
 let cantidad = carrito.filter(p => p.n === productos[i].n).length;
 let el = document.getElementById('cont-' + i);
-let elX = document.getElementById('quitx-' + i);
-if (el) {
-el.textContent = cantidad;
-el.style.display = cantidad > 0 ? 'block' : 'none';
-}
-if (elX) {
-elX.style.display = cantidad > 0 ? 'block' : 'none';
-}
+let row = document.getElementById('row-' + i);
+if (el) el.textContent = cantidad;
+if (row) row.classList.toggle('activo', cantidad > 0);
 }
 
 function actualizarContadorForAll() {
@@ -197,7 +257,18 @@ for (let i = 0; i < productos.length; i++) actualizarContador(i);
 }
 
 function actualizarTicket() {
-let niv = parseInt(document.getElementById('nivel-precio').value);
+let sel = document.getElementById('nivel-precio');
+let niv = parseInt(sel.value);
+let etiqueta = sel.options[niv].text.replace(/^[^\w]+/u, '').trim();
+document.getElementById('badge-nivel').textContent = etiqueta;
+document.getElementById('resumen-nivel').textContent = etiqueta;
+
+// precios visibles en cada tarjeta según el nivel
+productos.forEach((p, i) => {
+  let el = document.getElementById('precio-' + i);
+  if (el) el.textContent = '$' + p.p[niv].toFixed(2);
+});
+
 let total = 0, ptsTotal = 0, html = "";
 carrito.forEach(p => {
 let precio = p.p[niv];
