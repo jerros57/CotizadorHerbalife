@@ -3,7 +3,7 @@
 // CAMBIA EL NÚMERO DE VERSIÓN CADA VEZ QUE
 // ACTUALICES EL SITIO (ej: v3, v4, v5...)
 // ============================================
-const CACHE_NAME = 'multicy-cache-v3.3';
+const CACHE_NAME = 'multicy-cache-v3.4';
 
 const ARCHIVOS_A_CACHEAR = [
   './',
