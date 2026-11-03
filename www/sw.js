@@ -48,6 +48,7 @@ const ARCHIVOS_A_CACHEAR = [
   './img/skinserum.png',
   './img/skintonificador.png'
   './img/cache.png',
+  './img/creatina.png',
 ];
 
 // --- INSTALACIÓN: guarda archivos en caché ---
